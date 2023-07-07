@@ -29,7 +29,7 @@ for await (let line of readline) {
 let server = createServer()
 server.on('request', function (request, response) {
     if (request.url !== '/') return
-    response.end(html)
+    response.end(html())
     response.on('close', function () {
         if (! options.values.exit) process.exit(0)
     })
@@ -42,7 +42,8 @@ server.listen({port: options.values.port, host}, function () {
     console.info(`${url}`)
 })
 
-let html = `<!doctype html>
+function html() {
+return `<!doctype html>
 <title>chartit</title>
 <canvas></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -61,3 +62,4 @@ let chart = new Chart(document.querySelector('canvas'), {
 })
 </script>
 <script id="data" type="application/json">${JSON.stringify(data)}</script>`
+}
