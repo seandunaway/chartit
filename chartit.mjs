@@ -2,7 +2,6 @@
 import {exec} from 'node:child_process'
 import {createServer} from 'node:http'
 import {createInterface} from 'node:readline'
-import {pipeline} from 'node:stream'
 import {parseArgs} from 'node:util'
 
 let data = []
