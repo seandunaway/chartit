@@ -9,11 +9,12 @@ let data = []
 let options = parseArgs({options: {
     port: {short: 'p', type: 'string', default: '3100'},
     open: {short: 'o', type: 'boolean'},
-    help: {short: 'h', type: 'boolean'}
+    exit: {short: 'x', type: 'boolean'},
+    help: {short: 'h', type: 'boolean'},
 }})
 
 if (options.values.help) {
-    console.error('usage: [-p|--port <port>] [-o|--open] < [file]')
+    console.error('usage: [-p|--port <port>] [-o|--no-open] [-x|--no-exit] < [file]')
     process.exit(1)
 }
 
@@ -27,22 +28,16 @@ readline.on('line', function (line) {
 
 let server = createServer()
 server.on('request', function (request, response) {
-    if (request.url !== '/data') return response.end(html)
-
-    response.writeHead(200, {'content-type': 'text/event-stream'})
-    let i = 0
-    setInterval(function () {
-        if (data[i] === undefined) return
-        response.write(`data: ${data[i]}\n\n`)
-        i++
-    }, 0)
+    response.on('close', function () {
+        if (! options.values.exit) process.exit(0)
+    })
 })
 
 let host = 'localhost'
 server.listen({port: options.values.port, host}, function () {
     let url = `http://${host}:${options.values.port}/`
-    if (options.values.open) exec(`open ${url}`)
-    console.info(`\n${url}\n`)
+    if (! options.values.open) exec(`open ${url}`)
+    console.info(`${url}`)
 })
 
 let html = `<!doctype html>
