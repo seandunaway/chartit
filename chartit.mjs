@@ -19,15 +19,17 @@ if (options.values.help) {
 }
 
 let readline = createInterface({input: process.stdin})
-readline.on('line', function (line) {
+for await (let line of readline) {
     let matches = line.match(/(\d+\.?\d*)/g) ?? []
     for (let match of matches) {
-        data.push(match)
+        data.push(Number(match))
     }
-})
+}
 
 let server = createServer()
 server.on('request', function (request, response) {
+    if (request.url !== '/') return
+    response.end(html)
     response.on('close', function () {
         if (! options.values.exit) process.exit(0)
     })
@@ -45,8 +47,8 @@ let html = `<!doctype html>
 <canvas></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
-let labels = []
-let data = []
+let data = JSON.parse(document.getElementById('data').textContent)
+let labels = [...data.keys()]
 let chart = new Chart(document.querySelector('canvas'), {
     type: 'line',
     data: {labels, datasets: [{data}]},
@@ -57,11 +59,5 @@ let chart = new Chart(document.querySelector('canvas'), {
         plugins: {legend: {display: false}, tooltip: {enabled: false}}
     },
 })
-let i = 0
-let event_source = new EventSource('/data').addEventListener('message', function (event) {
-    labels.push(i)
-    data.push(Number(event.data))
-    i++
-    chart.update()
-})
-</script>`
+</script>
+<script id="data" type="application/json">${JSON.stringify(data)}</script>`
