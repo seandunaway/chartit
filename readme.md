@@ -1,6 +1,9 @@
 # chartit
 
+chart the standard input
+
 ## install
+
 `$ npm install -g @seandunaway/chartit`
 
 ## usage
