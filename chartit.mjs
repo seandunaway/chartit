@@ -45,6 +45,7 @@ server.listen({port: options.values.port, host}, function () {
 function html() {
 return `<!doctype html>
 <title>chartit</title>
+<style>body {height: 90vh;}</style>
 <canvas></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
@@ -54,7 +55,7 @@ let chart = new Chart(document.querySelector('canvas'), {
     type: 'line',
     data: {labels, datasets: [{data}]},
     options: {
-        animation: false,
+        animation: false, maintainAspectRatio: false,
         datasets: {line: {borderWidth: 1, pointRadius: 0, pointHitRadius: 0}},
         scales: {x: {display: false, grid: {display: false}}, y: {grid: {display: false}}},
         plugins: {legend: {display: false}, tooltip: {enabled: false}}
