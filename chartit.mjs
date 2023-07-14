@@ -8,13 +8,14 @@ let data = []
 
 let options = parseArgs({options: {
     port: {short: 'p', type: 'string', default: '3100'},
+    type: {short: 't', type: 'string', default: 'line'},
     open: {short: 'o', type: 'boolean'},
     exit: {short: 'x', type: 'boolean'},
     help: {short: 'h', type: 'boolean'},
 }})
 
-if (options.values.help) {
-    console.error('usage: [-p|--port <port>] [-o|--no-open] [-x|--no-exit] < [file]')
+if (options.values.help || ! options.values.type?.match(/^(line|bar)$/)) {
+    console.error('usage: [-p|--port <port>] [-t|--type <line|bar>] [-o|--no-open] [-x|--no-exit] < [file]')
     process.exit(1)
 }
 
@@ -54,7 +55,7 @@ return `<!doctype html>
 let data = JSON.parse(document.getElementById('data').textContent)
 let labels = [...data.keys()]
 let chart = new Chart(document.querySelector('canvas'), {
-    type: 'line',
+    type: '${options.values.type}',
     data: {labels, datasets: [{data}]},
     options: {
         animation: false, maintainAspectRatio: false,
