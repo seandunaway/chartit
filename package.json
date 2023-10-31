@@ -1,6 +1,6 @@
 {
   "name": "@seandunaway/chartit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "bin": "./chartit.mjs",
   "repository": "github:seandunaway/chartit"
 }

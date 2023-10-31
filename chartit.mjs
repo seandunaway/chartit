@@ -23,7 +23,7 @@ let readline = createInterface({input: process.stdin})
 for await (let line of readline) {
     if (line.startsWith('#')) continue
 
-    let matches = line.match(/(\d+\.?\d*)/g) ?? []
+    let matches = line.match(/((?:\+|\-)?\d+\.?\d*)/g) ?? []
     for (let match of matches) {
         data.push(Number(match))
     }
